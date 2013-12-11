@@ -51,7 +51,7 @@ class OctostalkerApplication < Sinatra::Base
       @organizations = client.organizations
       @organizations.map! { |o| organization_hash(o) }
 
-      @friends = client.followers(client.login, per_page: 16, auto_paginate: false)
+      @friends = get_friends
       @friends.map!{ |u| user_hash(u) }
       haml :logged, layout: :'layouts/application'
     else
@@ -147,6 +147,10 @@ class OctostalkerApplication < Sinatra::Base
       next if login == client.login
       client.follow(login)
     end
+  end
+
+  def get_friends
+    client.followers(client.login, per_page: 16, auto_paginate: false)
   end
 
   register Sinatra::Partial
