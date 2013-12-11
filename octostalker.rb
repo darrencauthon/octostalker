@@ -150,7 +150,9 @@ class OctostalkerApplication < Sinatra::Base
   end
 
   def get_friends
-    client.followers(client.login, per_page: 16, auto_paginate: false)
+    friends = client.followers(client.login, per_page: 999, auto_paginate: false)
+    ids_of_users_being_followed = client.following(client.login, per_page: 999).map { |f| f.id }
+    friends.reject { |f| ids_of_users_being_followed.include? f.id }
   end
 
   register Sinatra::Partial
